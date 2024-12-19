@@ -43,6 +43,7 @@ class EOMiniChargerSessionEnergySensor(EOMiniChargerEntity, SensorEntity):
             state_class=SensorStateClass.TOTAL,
             name="Consumption",
         )
+        self._attr_native_value = 0
         super().__init__(*args)
 
     @callback
@@ -56,7 +57,8 @@ class EOMiniChargerSessionEnergySensor(EOMiniChargerEntity, SensorEntity):
                 self._attr_native_value = 0
             else:
                 # No idea why ESKWH is stored in KWh/s...
-                self._attr_native_value = self.coordinator.data["ESKWH"] / 3600
+                eskwh = self.coordinator.data.get("ESKWH", 0)
+                self._attr_native_value = eskwh / 3600 if eskwh > 0 else 0
         self.async_write_ha_state()
 
     @property
