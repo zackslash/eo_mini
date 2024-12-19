@@ -94,7 +94,7 @@ class EOMiniChargerSessionChargingTimeSensor(EOMiniChargerEntity, SensorEntity):
                 )
                 self._attr_native_value = 0
             else:
-                self._attr_native_value = self.coordinator.data["ChargingTime"]
+                self._attr_native_value = self.coordinator.data.get("ChargingTime", 0)
         self.async_write_ha_state()
 
     @property
