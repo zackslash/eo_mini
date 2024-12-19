@@ -77,7 +77,7 @@ class EOMiniChargerSessionChargingTimeSensor(EOMiniChargerEntity, SensorEntity):
             key=SensorDeviceClass.DURATION,
             native_unit_of_measurement=UnitOfTime.SECONDS,
             device_class=SensorDeviceClass.DURATION,
-            state_class=SensorStateClass.TOTAL_INCREASING,
+            state_class=SensorStateClass.TOTAL,
             name="Charging Time",
         )
         self._attr_native_value = 0
@@ -89,6 +89,9 @@ class EOMiniChargerSessionChargingTimeSensor(EOMiniChargerEntity, SensorEntity):
 
         if self.coordinator.data:
             if self.coordinator.data["ESKWH"] == 0:
+                self._attr_last_reset = datetime.fromtimestamp(
+                    self.coordinator.data["PiTime"]
+                )
                 self._attr_native_value = 0
             else:
                 self._attr_native_value = self.coordinator.data["ChargingTime"]
